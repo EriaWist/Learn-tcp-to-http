@@ -1,4 +1,5 @@
-# URI學習,Uniform Resource Identifier, URI[參考連結](https://notfalse.net/36/http-uri)
+# URI學習,Uniform Resource Identifier, URI
+[參考連結](https://notfalse.net/36/http-uri)
 
 
 >## URI和URL的區別，URN又是什麼 :
