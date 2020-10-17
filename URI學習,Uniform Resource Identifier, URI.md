@@ -26,6 +26,7 @@
 >>>保留字`「@」、「:」、「/」、「?」、「%」、「=」、「 」(空白) 例如: 「:」表示為 「%3A」這是 URI 規範中的 百分比編碼 (Percent-Encoding)，也就是俗稱的 URI (URL) 編碼。`
 >>>
 >>> 井字號#是由 Client 端 (通常為瀏覽器) 處理的部分，並 不會傳遞給 Server !
+>>>
 >>> 一個經典範例 — Google 搜尋:`https://www.google.com.tw/?gws_rd=ssl#q=搜尋內容`
 >>>
 >>>送出的內容其實為:`https://www.google.com.tw/search?q=搜尋內容&.....`
