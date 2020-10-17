@@ -16,10 +16,10 @@
 >>```
 >>[上述連結](https://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6)
 >>
->> 小知識:`冒號 (:) 唸作 colon [ˋkolən]，斜線 (/) 唸作 slash [slæʃ]，
+>>> 小知識:`冒號 (:) 唸作 colon [ˋkolən]，斜線 (/) 唸作 slash [slæʃ]，
 點 (.) 唸作 dot [dɑt]，井號 (#) 唸作 hash [hæʃ]。`
->>
->>問號後面`?age=24&gender=female
+>>>
+>>>問號後面`?age=24&gender=female
 代表的可能是，我想在這個網站 (如果有支援)尋找:
 『年紀 24 且 性別是女性 』。
 `
