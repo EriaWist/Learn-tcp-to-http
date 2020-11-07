@@ -5,7 +5,6 @@
 #include <stdio.h>          //基本io
 #include <string.h>         //字串處理以及bzero清空
 
-
 //#include <sys/types.h>
 //#include <sys/socket.h>
 #include <netinet/in.h>   //sockaddr_in會用到\ /*<netinet/in.h>在<arpa/inet.h>有被include所以不加也沒差*/
@@ -15,11 +14,16 @@ int a=0;
 void *print_message(void *argu) {    // 印出一次 訊息
     char buf[1024]={0};
     int recvSize;//存回傳資料大小
-    int client_scokfd = *(int *)argu;
+    int client_scokfd = *(int *)argu;//將無狀態資料轉成整數
     while (1) {
         recvSize=recv(client_scokfd, buf, sizeof(buf), 0);
         buf[recvSize]='\0';
         printf("%s\n",buf);
+        printf("---------------------\n");
+        printf("資料內容\n");
+        printf("資料大小 : %d\n",recvSize);
+        printf("來源client_sockfd : %d\n",client_scokfd);
+        printf("---------------------\n");
     }
     return NULL;
 }
@@ -34,7 +38,7 @@ void *print_mary(void *argu) {     // 每隔一秒鐘印出一次 Mary 的函數
 }
 
 int main() {     // 主程式開始
-    pthread_t message_thread, thread2;     // 宣告兩個執行緒
+    pthread_t message_thread;     // 宣告執行緒
     
     struct sockaddr_in server,client;//存一些socket資料
 
@@ -65,10 +69,9 @@ int main() {     // 主程式開始
     listen(sockfd,5);//告訴系統設定好了 以及做大連線數量
     int addrlen=sizeof(client);//取得sockaddr_in大小
     int client_scokfd;//存新連線fd
-    
-    
     while (client_scokfd=accept(sockfd,(struct sockaddr_in*) &client, &addrlen)) {
         pthread_create(&message_thread, NULL, &print_message, (void *)&client_scokfd);//執行緒 print_george
+        /*第一個放pthread_t(存線程狀態資料) */
     }
     return 0;
 }
