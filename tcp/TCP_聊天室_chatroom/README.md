@@ -54,7 +54,7 @@ Return value
 Example
 ```
 int forClientSockfd;
-struct sockaddr_in client_info;
-int addrlen = sizeof(client_addr);
-forClientSockfd = accept(sockfd,(structsockaddr*) &client_addr, &addrlen);
+struct sockaddr_in client;
+int addrlen = sizeof(client);
+forClientSockfd = accept(sockfd,(struct sockaddr_in*) &client, &addrlen);
 ```
