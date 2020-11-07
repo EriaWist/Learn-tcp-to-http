@@ -21,7 +21,7 @@ socket(int domain, int type, int protocol)<br />
 
 int bind(int sock, struct sockaddr *addr, socklen_t addrlen);  //Linux [參考資料](http://c.biancheng.net/cpp/html/3033.html)
 
-把sock (table的位置)和剛剛設定的sockaddr_in綁定
+`把sock (table的位置)和剛剛設定的sockaddr_in綁定`
 
 `sock 为 socket 文件描述符，addr 为 sockaddr 裝上面宣告sockaddr_in的記憶體位置，addrlen 為 addr 变量的大小，可由 sizeof() 计算得出。`
 
