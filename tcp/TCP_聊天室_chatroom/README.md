@@ -1,5 +1,5 @@
 # 用TCP寫的聊天室<br />
-## 參考資料
+## [參考資料](http://zake7749.github.io/2015/03/17/SocketProgramming/)
 sockaddr_in [參考資料](https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/392331/)
 ```
 sockaddr和sockaddr_in包含的資料都是一樣的，但他們在使用上有區別：
@@ -36,7 +36,7 @@ listen(sock,5);`告訴系統sockfd(table的位置)可以連線跟最大連線數
 Socket在港口等了又等，終於有客人拜訪了，我們可以用函式accept()去接見這名客人。當accept()被調用時，它會為該請求產生出一個新的Socket，並把這個請求從監聽隊列剔除掉。
 
 Prototype
-int accept(int sockfd, struct sockaddr addr, socklen_t addrlen);
+int accept(int sockfd, struct sockaddr addr, socklen_t addrlen); [參考資料](http://zake7749.github.io/2015/03/17/SocketProgramming/)
 ```
 Argument
 sockfd
