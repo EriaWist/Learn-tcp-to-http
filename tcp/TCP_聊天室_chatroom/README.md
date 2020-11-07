@@ -26,3 +26,7 @@ int bind(int sock, struct sockaddr *addr, socklen_t addrlen);  //Linux [參考�
 `sock 为 socket 文件描述符，addr 为 sockaddr 裝上面宣告sockaddr_in的記憶體位置，addrlen 為 addr 变量的大小，可由 sizeof() 计算得出。`
 
 `bind(sock,(struct sockaddr*)&server,sizeof(server));`
+
+listen(sock,5);`告訴系統sock(table的位置)可以連線跟最大連線數量` [參考資料](http://stenlyho.blogspot.com/2008/08/socket-listen.html)
+
+```listen()用來通知OS/network socketfd的socket已經可以接受建立連線。參數backlog指定同時能處理的最大連接要求，如果連接數目達此上限則client端將收到ECONNREFUSED的錯誤```
