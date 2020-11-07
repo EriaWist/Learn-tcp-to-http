@@ -13,37 +13,19 @@
 #define MAX_LEN 1024
 
 int all_User_fd[10]={0};//存進聊天室的人資訊
-int User_fd_count=0;    //目前幾個人
-void send_all_message(char buf[MAX_LEN]);//對所有人傳送訊息
-void now_Members();//傳送目前人員訊息
-void *print_message(void *argu) {    // 印出一次 訊息
+int User_fd_count=0;                        //目前幾個人
+void send_all_message(char buf[MAX_LEN]);   //對所有人傳送訊息
+void now_Members();                         //傳送目前在線人員訊息給所有人有新人以及目前使用者
+void init_print_message(int client_scokfd); //print_message 的第一部份 負責處理使用者連進來的預處理ex:發送訊息告訴大家有新使用者加入
+void processing_print_message(int client_scokfd);//對資料做處理並且發送
+
+void *print_message(void *argu);            //以線程開啟 傳送訊息由三個部分組成 使用者加入(init_print_message) 訊息處理 使用者離線()
+
+
+void *print_message(void *argu) {
     int client_scokfd = *(int *)argu;//將無狀態資料轉成整數
-    printf("~~~~~~~~~~~~~~~~~~~~~\n");
-    printf("開始\n");
-    printf("進入的sock fd : %d\n",client_scokfd);
-    printf("在all_User_fd的位置 : %d\n",User_fd_count);
-    printf("目前使用者數量 : %d\n",User_fd_count+1);
-    
-    int in_arr_fd_position=User_fd_count;//在使用者fd的位置
-    all_User_fd[User_fd_count]=client_scokfd;//存當前使用者
-    User_fd_count++;    //使用者+1
-    now_Members();      //傳送所有使用者資料
-    printf("~~~~~~~~~~~~~~~~~~~~~\n");
-    
-    char buf[MAX_LEN]={0};//存回傳資料
-    int recvSize;//存回傳資料大小
-    
-    while (recvSize=recv(client_scokfd, buf, sizeof(buf), 0)) {
-        buf[recvSize]='\0';
-        
-        printf("%s\n",buf);
-        send_all_message(buf);//將訊息發送給所有人
-        printf("---------------------\n");
-        printf("資料內容\n");
-        printf("資料大小 : %d\n",recvSize);
-        printf("來源client_sockfd : %d\n",client_scokfd);
-        printf("---------------------\n");
-    }
+    init_print_message(client_scokfd);//預處理包括將sock存入陣列 以及發送訊息告訴大家目前使用者
+    processing_print_message(client_scokfd);//資料處理
     
     printf("=====================\n");//當關閉
     printf("關閉\n");
@@ -58,6 +40,37 @@ void *print_message(void *argu) {    // 印出一次 訊息
     printf("=====================\n");
     return NULL;
 }
+void init_print_message(int client_scokfd)
+{
+    printf("~~~~~~~~~~~~~~~~~~~~~\n");
+    printf("開始\n");
+    printf("進入的sock fd : %d\n",client_scokfd);
+    printf("在all_User_fd的位置 : %d\n",User_fd_count);
+    printf("目前使用者數量 : %d\n",User_fd_count+1);
+    all_User_fd[User_fd_count]=client_scokfd;//存當前使用者
+    User_fd_count++;    //使用者+1
+    now_Members();      //傳送所有在線使用者資料
+    printf("~~~~~~~~~~~~~~~~~~~~~\n");
+    
+}
+void processing_print_message(int client_scokfd)
+{
+    char buf[MAX_LEN]={0};//存回傳資料
+    int recvSize;//存回傳資料大小
+    while (recvSize=recv(client_scokfd, buf, sizeof(buf), 0)) {
+        buf[recvSize]='\0';
+        
+        printf("%s\n",buf);
+        send_all_message(buf);//將訊息發送給所有人
+        printf("---------------------\n");
+        printf("資料內容\n");
+        printf("資料大小 : %d\n",recvSize);
+        printf("來源client_sockfd : %d\n",client_scokfd);
+        printf("---------------------\n");
+    }
+}
+
+
 void send_all_message(char buf[MAX_LEN])
 {
     int i;
@@ -65,7 +78,6 @@ void send_all_message(char buf[MAX_LEN])
         send(all_User_fd[i], buf, sizeof(buf), 0);
     }
 }
-
 void now_Members()
 {
     char buf[MAX_LEN],temp[MAX_LEN];//存要傳過去的資料
@@ -85,6 +97,8 @@ void now_Members()
     }
    
 }
+
+
 int main() {     // 主程式開始
     pthread_t message_thread;     // 宣告執行緒
     
