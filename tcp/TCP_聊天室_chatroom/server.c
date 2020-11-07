@@ -12,32 +12,25 @@
 
 #define MAX_LEN 1024
 
-int all_User_fd[10]={0};//存進聊天室的人資訊
-int User_fd_count=0;                        //目前幾個人
-void send_all_message(char buf[MAX_LEN]);   //對所有人傳送訊息
-void now_Members();                         //傳送目前在線人員訊息給所有人有新人以及目前使用者
+
 void init_print_message(int client_scokfd); //print_message 的第一部份 負責處理使用者連進來的預處理ex:發送訊息告訴大家有新使用者加入
 void processing_print_message(int client_scokfd);//對資料做處理並且發送
+void close_print_message(int client_scokfd);//當連線退出時
+void *print_message(void *argu);            //以線程開啟 傳送訊息由三個部分組成 使用者加入(init_print_message) 訊息處理(processing_print_message) 使用者離線(close_print_message)
+ 
+void send_all_message(char buf[MAX_LEN]);   //對所有人傳送訊息
+void now_Members();                         //傳送目前在線人員訊息給所有人有新人以及目前使用者
+void message_add_id (char *buf,int client_scokfd);//將訊息加上編號
 
-void *print_message(void *argu);            //以線程開啟 傳送訊息由三個部分組成 使用者加入(init_print_message) 訊息處理 使用者離線()
-
+int all_User_fd[10]={0};//存進聊天室的人資訊
+int User_fd_count=0;//目前幾個人
 
 void *print_message(void *argu) {
     int client_scokfd = *(int *)argu;//將無狀態資料轉成整數
     init_print_message(client_scokfd);//預處理包括將sock存入陣列 以及發送訊息告訴大家目前使用者
     processing_print_message(client_scokfd);//資料處理
+    close_print_message(client_scokfd);//當連線結束
     
-    printf("=====================\n");//當關閉
-    printf("關閉\n");
-    int i;
-    for (i=0; i<User_fd_count; i++) {
-        all_User_fd[i]=all_User_fd[i+1];//將要關閉的sockfd刪除(覆蓋掉)
-    }
-    User_fd_count--;//使用者減一
-    close(client_scokfd);//關閉
-    printf("關閉client_sockfd : %d\n",client_scokfd);
-    printf("剩餘數量 : %d\n",User_fd_count);
-    printf("=====================\n");
     return NULL;
 }
 void init_print_message(int client_scokfd)
@@ -58,8 +51,8 @@ void processing_print_message(int client_scokfd)
     char buf[MAX_LEN]={0};//存回傳資料
     int recvSize;//存回傳資料大小
     while (recvSize=recv(client_scokfd, buf, sizeof(buf), 0)) {
-        buf[recvSize]='\0';
-        
+        buf[recvSize]='\0';//傳過來的資料不會有\0
+        message_add_id(buf,client_scokfd);//加上id
         printf("%s\n",buf);
         send_all_message(buf);//將訊息發送給所有人
         printf("---------------------\n");
@@ -67,10 +60,29 @@ void processing_print_message(int client_scokfd)
         printf("資料大小 : %d\n",recvSize);
         printf("來源client_sockfd : %d\n",client_scokfd);
         printf("---------------------\n");
+        bzero(buf, sizeof(buf));//好習慣要歸0
     }
 }
-
-
+void close_print_message(int client_scokfd){
+    printf("=====================\n");//當關閉
+    printf("關閉\n");
+    int i;
+    for (i=0; i<User_fd_count&&client_scokfd!=all_User_fd[i]; i++);//取得要刪除位置
+    for (;i<User_fd_count; i++) {
+        all_User_fd[i]=all_User_fd[i+1];//將要關閉的sockfd刪除(覆蓋掉)
+    }
+    User_fd_count--;//使用者減一
+    close(client_scokfd);//關閉
+    printf("關閉client_sockfd : %d\n",client_scokfd);
+    printf("剩餘數量 : %d\n",User_fd_count);
+    printf("=====================\n");
+}
+void message_add_id (char *buf,int client_scokfd){//將訊息加上編號
+    char temp[MAX_LEN];
+    strcpy(temp, buf);
+    sprintf(buf, "訊息事由%d發送\n%s",client_scokfd,temp);
+    
+}
 void send_all_message(char buf[MAX_LEN])
 {
     int i;
@@ -88,7 +100,7 @@ void now_Members()
         strcpy(temp, buf);
         sprintf(buf, "%s %d",temp,all_User_fd[i]);
     }
-    int a=strlen(buf);
+    buf[strlen(buf)]='\n';
     printf("#####################\n");
     printf("%s\n",buf);
     printf("#####################\n");
