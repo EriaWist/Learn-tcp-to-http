@@ -25,6 +25,7 @@ void *print_message(void *argu) {    // 印出一次 訊息
     all_User_fd[User_fd_count]=client_scokfd;
     User_fd_count++;//使用者+1
     printf("~~~~~~~~~~~~~~~~~~~~~\n");
+    
     char buf[1024]={0};
     int recvSize;//存回傳資料大小
     
