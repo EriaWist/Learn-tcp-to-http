@@ -10,6 +10,8 @@
 #include <netinet/in.h>   //sockaddr_in會用到\ /*<netinet/in.h>在<arpa/inet.h>有被include所以不加也沒差*/
 #include <arpa/inet.h>    //inet_addr用到
 
+#define MAX_LEN 1024
+
 int all_User_fd[10]={0};//存進聊天室的人資訊
 int User_fd_count=0;    //目前幾個人
 
@@ -26,7 +28,7 @@ void *print_message(void *argu) {    // 印出一次 訊息
     User_fd_count++;//使用者+1
     printf("~~~~~~~~~~~~~~~~~~~~~\n");
     
-    char buf[1024]={0};
+    char buf[MAX_LEN]={0};
     int recvSize;//存回傳資料大小
     
     while (recvSize=recv(client_scokfd, buf, sizeof(buf), 0)) {
@@ -52,7 +54,10 @@ void *print_message(void *argu) {    // 印出一次 訊息
     printf("=====================\n");
     return NULL;
 }
-
+void send_all_message(char buf[MAX_LEN])
+{
+    
+}
 
 int main() {     // 主程式開始
     pthread_t message_thread;     // 宣告執行緒
@@ -84,6 +89,7 @@ int main() {     // 主程式開始
      */
     bind(sockfd,(struct sockaddr*)&server,sizeof(server));//綁定sockfd和設定sockaddr_in server
     listen(sockfd,5);//告訴系統設定好了 以及做大連線數量
+    system("lsof -i:5678");
     int addrlen=sizeof(client);//取得sockaddr_in大小
     int client_scokfd;//存新連線fd
     while (client_scokfd=accept(sockfd,(struct sockaddr_in*) &client, &addrlen)) {
