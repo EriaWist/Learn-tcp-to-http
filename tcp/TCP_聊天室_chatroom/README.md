@@ -10,8 +10,6 @@ sockaddr和sockaddr_in包含的資料都是一樣的，但他們在使用上有�
 ``` 
 <br />
 socket(int domain, int type, int protocol)<br />
-
-
 ```
     domain為位址家族(PF_INET)
     type指定通訊的方式(例如 TCP(SOCK_STREAM) 或是
