@@ -20,3 +20,5 @@ socket(int domain, int type, int protocol)<br />
 ```
 
 int bind(int sock, struct sockaddr *addr, socklen_t addrlen);  //Linux
+
+`sock 为 socket 文件描述符，addr 为 sockaddr 结构体变量的指针，addrlen 为 addr 变量的大小，可由 sizeof() 计算得出。`
