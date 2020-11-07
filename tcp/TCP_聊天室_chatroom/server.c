@@ -86,7 +86,7 @@ void message_add_id (char *buf,int client_scokfd){//將訊息加上編號
     char temp[MAX_LEN];
     bzero(temp, sizeof(temp));
     strcpy(temp, buf);
-    sprintf(buf, "訊息事由%d發送\n%s",client_scokfd,temp);
+    sprintf(buf, "\n訊息事由%d發送 : %s\n",client_scokfd,temp);
     
 }
 void send_all_message(char *buf)
