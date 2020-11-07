@@ -18,3 +18,5 @@ socket(int domain, int type, int protocol)<br />
     protocol通為通訊代碼，通常設0，可以直接根據type自動設定。SOCK_STREAM 且系列为 AF_INET ，則協議自動為TCP
     ex:tcp 用 IPPROTO_TCP  6
 ```
+
+int bind(int sock, struct sockaddr *addr, socklen_t addrlen);  //Linux
