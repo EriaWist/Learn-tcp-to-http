@@ -17,9 +17,9 @@ void *print_message(void *argu) {    // 印出一次 訊息
     int client_scokfd = *(int *)argu;//將無狀態資料轉成整數
     printf("~~~~~~~~~~~~~~~~~~~~~\n");
     printf("開始\n");
-    printf("進入的sock fd : %d",client_scokfd);
-    printf("在all_User_fd的位置 : %d",User_fd_count);
-    printf("目前使用者數量 : %d",User_fd_count+1);
+    printf("進入的sock fd : %d\n",client_scokfd);
+    printf("在all_User_fd的位置 : %d\n",User_fd_count);
+    printf("目前使用者數量 : %d\n",User_fd_count+1);
     
     int in_arr_fd_position=User_fd_count;//在使用者fd的位置
     all_User_fd[User_fd_count]=client_scokfd;
@@ -47,7 +47,7 @@ void *print_message(void *argu) {    // 印出一次 訊息
     User_fd_count--;//使用者減一
     close(client_scokfd);//關閉
     printf("關閉client_sockfd : %d\n",client_scokfd);
-    printf("剩餘數量 : %d\n",client_scokfd);
+    printf("剩餘數量 : %d\n",User_fd_count);
     printf("=====================\n");
     return NULL;
 }
