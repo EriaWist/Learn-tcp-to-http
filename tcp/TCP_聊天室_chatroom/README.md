@@ -1,6 +1,6 @@
 # 用TCP寫的聊天室<br />
 ## 參考資料
-[sockaddr_in](https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/392331/)
+sockaddr_in [參考資料](https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/392331/)
 ```
 sockaddr和sockaddr_in包含的資料都是一樣的，但他們在使用上有區別：
 
