@@ -42,6 +42,11 @@ void init_print_message(int client_scokfd)
     printf("目前使用者數量 : %d\n",User_fd_count+1);
     all_User_fd[User_fd_count]=client_scokfd;//存當前使用者
     User_fd_count++;    //使用者+1
+    char return_sock_fd[20]={0};
+    
+    sprintf(return_sock_fd, "您的sock id為%d\n",client_scokfd);//告知sock id
+    send(client_scokfd, return_sock_fd, sizeof(return_sock_fd), 0);//告知sock id
+    
     now_Members();      //傳送所有在線使用者資料
     printf("~~~~~~~~~~~~~~~~~~~~~\n");
     
@@ -87,11 +92,10 @@ void message_add_id (char *buf,int client_scokfd){//將訊息加上編號
 void send_all_message(char *buf)
 {
     /*
-     警告使用指標sizeof會有問題只抓到8個字元
+     警告使用指標sizeof會有問題只抓到8個字元或者單一字元
      所以我用strlen
      */
     int i;
-    printf("%d\n",strlen(buf));
     for (i=0; i<User_fd_count; i++) {
         send(all_User_fd[i],buf, strlen(buf), 0);
     }
