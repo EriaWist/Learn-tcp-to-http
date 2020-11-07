@@ -14,7 +14,8 @@
 
 int all_User_fd[10]={0};//存進聊天室的人資訊
 int User_fd_count=0;    //目前幾個人
-
+void send_all_message(char buf[MAX_LEN]);//對所有人傳送訊息
+void now_Members();//傳送目前人員訊息
 void *print_message(void *argu) {    // 印出一次 訊息
     int client_scokfd = *(int *)argu;//將無狀態資料轉成整數
     printf("~~~~~~~~~~~~~~~~~~~~~\n");
@@ -24,16 +25,19 @@ void *print_message(void *argu) {    // 印出一次 訊息
     printf("目前使用者數量 : %d\n",User_fd_count+1);
     
     int in_arr_fd_position=User_fd_count;//在使用者fd的位置
-    all_User_fd[User_fd_count]=client_scokfd;
-    User_fd_count++;//使用者+1
+    all_User_fd[User_fd_count]=client_scokfd;//存當前使用者
+    User_fd_count++;    //使用者+1
+    now_Members();      //傳送所有使用者資料
     printf("~~~~~~~~~~~~~~~~~~~~~\n");
     
-    char buf[MAX_LEN]={0};
+    char buf[MAX_LEN]={0};//存回傳資料
     int recvSize;//存回傳資料大小
     
     while (recvSize=recv(client_scokfd, buf, sizeof(buf), 0)) {
         buf[recvSize]='\0';
+        
         printf("%s\n",buf);
+        send_all_message(buf);//將訊息發送給所有人
         printf("---------------------\n");
         printf("資料內容\n");
         printf("資料大小 : %d\n",recvSize);
@@ -56,9 +60,31 @@ void *print_message(void *argu) {    // 印出一次 訊息
 }
 void send_all_message(char buf[MAX_LEN])
 {
-    
+    int i;
+    for (i=0; i<User_fd_count; i++) {
+        send(all_User_fd[i], buf, sizeof(buf), 0);
+    }
 }
 
+void now_Members()
+{
+    char buf[MAX_LEN],temp[MAX_LEN];//存要傳過去的資料
+    int i;
+    bzero(buf, sizeof(buf));
+    sprintf(buf, "目前人數為 : %d 有",User_fd_count);
+    for (i=0; i<User_fd_count; i++) {
+        strcpy(temp, buf);
+        sprintf(buf, "%s %d",temp,all_User_fd[i]);
+    }
+    int a=strlen(buf);
+    printf("#####################\n");
+    printf("%s\n",buf);
+    printf("#####################\n");
+    for (i=0; i<User_fd_count; i++) {
+        send(all_User_fd[i], buf, sizeof(buf), 0);
+    }
+   
+}
 int main() {     // 主程式開始
     pthread_t message_thread;     // 宣告執行緒
     
