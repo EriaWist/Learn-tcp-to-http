@@ -32,3 +32,32 @@ bind(sock,(struct sockaddr*)&server,sizeof(server));
 listen(sock,5);`告訴系統sockfd(table的位置)可以連線跟最大連線數量` [參考資料](http://stenlyho.blogspot.com/2008/08/socket-listen.html)
 
 ```listen()用來通知OS/network socketfd的socket已經可以接受建立連線。參數backlog指定同時能處理的最大連接要求，如果連接數目達此上限則client端將收到ECONNREFUSED的錯誤```
+
+
+```
+Socket在港口等了又等，終於有客人拜訪了，我們可以用函式accept()去接見這名客人。當accept()被調用時，它會為該請求產生出一個新的Socket，並把這個請求從監聽隊列剔除掉。
+
+Prototype
+int accept(int sockfd, struct sockaddr addr, socklen_t addrlen);
+
+Argument
+sockfd
+毫無反應，就是個socket的描述符
+
+addr
+一樣是個描述Socket資訊的結構，不過他是一個空容器，用於儲存接收到的Client端相關資訊，比如port、IP等等。
+
+addrlen
+描述的是addr的大小
+
+Return value
+它會傳回一個新的Socket描述符，以後和Client端交談的是這個新創出的Socket，如果失敗則傳回-1(INVALID_SOCKET)
+```
+```
+Example
+int forClientSockfd;
+struct sockaddr_in client_info;
+int addrlen = sizeof(client_addr);
+
+forClientSockfd = accept(sockfd,(structsockaddr*) &client_addr, &addrlen);
+```
