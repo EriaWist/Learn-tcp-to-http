@@ -18,7 +18,7 @@ void processing_print_message(int client_scokfd);//對資料做處理並且發�
 void close_print_message(int client_scokfd);//當連線退出時
 void *print_message(void *argu);            //以線程開啟 傳送訊息由三個部分組成 使用者加入(init_print_message) 訊息處理(processing_print_message) 使用者離線(close_print_message)
  
-void send_all_message(char buf[MAX_LEN]);   //對所有人傳送訊息
+void send_all_message(char *buf);   //對所有人傳送訊息
 void now_Members();                         //傳送目前在線人員訊息給所有人有新人以及目前使用者
 void message_add_id (char *buf,int client_scokfd);//將訊息加上編號
 
@@ -79,15 +79,21 @@ void close_print_message(int client_scokfd){
 }
 void message_add_id (char *buf,int client_scokfd){//將訊息加上編號
     char temp[MAX_LEN];
+    bzero(temp, sizeof(temp));
     strcpy(temp, buf);
     sprintf(buf, "訊息事由%d發送\n%s",client_scokfd,temp);
     
 }
-void send_all_message(char buf[MAX_LEN])
+void send_all_message(char *buf)
 {
+    /*
+     警告使用指標sizeof會有問題只抓到8個字元
+     所以我用strlen
+     */
     int i;
+    printf("%d\n",strlen(buf));
     for (i=0; i<User_fd_count; i++) {
-        send(all_User_fd[i], buf, sizeof(buf), 0);
+        send(all_User_fd[i],buf, strlen(buf), 0);
     }
 }
 void now_Members()
