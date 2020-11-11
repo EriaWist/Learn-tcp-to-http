@@ -12,11 +12,13 @@ void readMessage(int sock)
 {
     int readSize;
     char temp[256];
+    bzero(temp, sizeof(temp));
     while (readSize = read(sock,temp,sizeof(temp))) {
         temp[readSize] = '\0';
         printf("%s\n", temp);
         bzero(temp, sizeof(temp));
     }
+ 
 }
 
             
@@ -44,7 +46,6 @@ int main(void) {
     char buf[256],temp[256],shake[]="is join 已加入 準備好了";
     char ip[]="127.0.0.1";
     int port = 5678;
-    pid_t pid;
 
     pthread_t sniffer_thread;
     
