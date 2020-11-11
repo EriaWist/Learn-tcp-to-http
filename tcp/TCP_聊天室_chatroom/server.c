@@ -102,6 +102,7 @@ void send_all_message(char *buf)
 }
 void now_Members()
 {
+    sleep(1);//避免封包沾黏 導致訊息消失
     char buf[MAX_LEN],temp[MAX_LEN];//存要傳過去的資料
     int i;
     bzero(buf, sizeof(buf));
@@ -115,7 +116,7 @@ void now_Members()
     printf("%s\n",buf);
     printf("#####################\n");
     for (i=0; i<User_fd_count; i++) {
-        send(all_User_fd[i], buf, sizeof(buf), 0);
+        send(all_User_fd[i], buf, strlen(buf), 0);
     }
    
 }
